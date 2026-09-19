@@ -1,0 +1,66 @@
+* {
+  margin: 5px;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+body {
+  background: #eef2f5;
+}
+
+.atas {
+  display: flex;
+  justify-content: space-between;
+  background: #2c5c97;
+  color: white;
+  padding: 20px 40px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.banner {
+  background: #e1ebf7;
+  padding: 30px;
+  color: #2c5c97;
+}
+
+.banner img {
+  border-radius: 50%;
+  border: 4px solid #2c5c97;
+  margin-bottom: 10px;
+}
+
+.intro {
+  background: #ffffff;
+  padding: 25px;
+  font-size: 17px;
+  line-height: 1.6;
+  border-radius: 8px;
+}
+
+.tiga-kotak {
+  display: flex;
+  gap: 10px;
+}
+
+.kotak {
+  background: #ffffff;
+  flex: 1;
+  padding: 25px;
+  border-radius: 8px;
+  line-height: 1.8;
+}
+
+.footer {
+  background: #2c5c97;
+  color: white;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+h3 {
+  color: #2c5c97;
+  margin-bottom: 10px;
+}
