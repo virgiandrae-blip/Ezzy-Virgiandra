@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SistemPro - Management & Analytics Portal</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Chart.js for Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .active-nav {
+      background-color: #4f46e5 !important;
+      color: #ffffff !important;
+    }
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen">
+
+  <!-- ========================================== -->
+  <!-- 1. HALAMAN MASUK (LOGIN PAGE)              -->
+  <!-- ========================================== -->
+  <div id="page-login" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-slate-50 to-purple-50 p-4">
+    <div class="w-full max-w-md bg-white rounded-3xl shadow-xl border border-slate-100 p-8 space-y-6 relative overflow-hidden">
+      
+      <!-- Decorative Background Blur -->
+      <div class="absolute -top-10 -right-10 w-32 h-32 bg-indigo-200 rounded-full blur-2xl opacity-50"></div>
+      <div class="absolute -bottom-10 -left-10 w-32 h-32 bg-purple-200 rounded-full blur-2xl opacity-50"></div>
+
+      <!-- Header & Logo -->
+      <div class="text-center space-y-2 relative z-10">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-indigo-600 text-white shadow-lg shadow-indigo-200 mb-2">
+          <i data-lucide="layers" class="w-6 h-6"></i>
+        </div>
+        <h2 class="text-2xl font-bold tracking-tight text-slate-900">Selamat Datang Kembali</h2>
+        <p class="text-xs text-slate-500">Masukkan akun Anda untuk mengakses sistem manajemen</p>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 relative z-10">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Alamat Email <span class="text-red-500">*</span></label>
+          <div class="relative">
+            <i data-lucide="mail" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="email" required value="Ezzy@sistempro.com" placeholder="nama@perusahaan.com" class="w-full pl-9 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 mb-1">Kata Sandi <span class="text-red-500">*</span></label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+            <input type="password" required value="••••••••••••" placeholder="••••••••" class="w-full pl-9 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs">
+          <label class="flex items-center space-x-2 text-slate-600 cursor-pointer">
+            <input type="checkbox" checked class="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+            <span>Ingat Saya</span>
+          </label>
+          <a href="#" class="text-indigo-600 hover:text-indigo-700 font-medium">Lupa Password?</a>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold rounded-xl shadow-lg shadow-indigo-100 transition-all transform active:scale-[0.99] flex items-center justify-center space-x-2">
+          <span>Masuk ke Akun Anda</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- Divider -->
+      <div class="relative my-4 z-10">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+        <div class="relative flex justify-center text-xs uppercase"><span class="bg-white px-3 text-slate-400 text-[10px]">Atau Masuk Dengan SSO</span></div>
+      </div>
+
+      <!-- SSO Buttons -->
+      <div class="space-y-2 relative z-10">
+        <button onclick="handleLoginDirect()" type="button" class="w-full py-2.5 px-4 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
+          <i data-lucide="chrome" class="w-4 h-4 text-red-500"></i>
+          <span>Google Workspace</span>
+        </button>
+        <button onclick="handleLoginDirect()" type="button" class="w-full py-2.5 px-4 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
+          <i data-lucide="building-2" class="w-4 h-4 text-blue-600"></i>
+          <span>Akses Perusahaan (SSO)</span>
+        </button>
+        <button onclick="handleLoginDirect()" type="button" class="w-full py-2.5 px-4 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 hover:bg-slate-50 transition-all flex items-center justify-center space-x-2">
+          <i data-lucide="phone" class="w-4 h-4 text-emerald-600"></i>
+          <span>WhatsApp OTP</span>
+        </button>
+      </div>
+
+      <p class="text-center text-[11px] text-slate-400 relative z-10">&copy; 2026 SistemPro Inc. Hak Cipta Dilindungi.</p>
+    </div>
+  </div>
+
+
+  <!-- ========================================== -->
+  <!-- MAIN APP CONTAINER (DASHBOARD & FORM)      -->
+  <!-- ========================================== -->
+  <div id="app-container" class="hidden min-h-screen flex flex-col md:flex-row">
+    
+    <!-- SIDEBAR NAV -->
+    <aside class="w-full md:w-64 bg-white border-r border-slate-200 flex flex-col justify-between p-4 shrink-0">
+      <div class="space-y-6">
+        <!-- Logo -->
+        <div class="flex items-center space-x-3 px-2 py-1">
+          <div class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center font-bold text-lg shadow-md shadow-indigo-100">
+            S
+          </div>
+          <div>
+            <h1 class="font-bold text-slate-900 text-base leading-none">SistemPro</h1>
+            <span class="text-[10px] text-slate-400 font-medium">Enterprise v2.4</span>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="space-y-1">
+          <button id="nav-dashboard" onclick="switchPage('dashboard')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all active-nav">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span>Dashboard</span>
+          </button>
+          <button id="nav-form" onclick="switchPage('form')" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-100 transition-all">
+            <i data-lucide="file-plus-2" class="w-4 h-4"></i>
+            <span>Entri Data Baru</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Logout Button -->
+      <div class="pt-4 border-t border-slate-100">
+        <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-all">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+          <span>Keluar</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="flex-1 flex flex-col min-w-0 bg-slate-50 overflow-y-auto">
+      
+      <!-- TOP HEADER -->
+      <header class="bg-white border-b border-slate-200 px-6 py-3 flex items-center justify-between sticky top-0 z-20">
+        <div class="flex items-center space-x-2 text-xs text-slate-500">
+          <span class="font-semibold text-slate-700">Portal Manajemen</span>
+          <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+          <span id="breadcrumb-title" class="text-indigo-600 font-medium">Dashboard Analitik</span>
+        </div>
+
+        <!-- User Profile & Action -->
+        <div class="flex items-center space-x-4">
+          <button class="relative p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-all">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
+          </button>
+          
+          <div class="flex items-center space-x-3 pl-3 border-l border-slate-200">
+            <img src="https://placehold.co/100x100/4f46e5/ffffff?text=S" alt="Sarah" class="w-8 h-8 rounded-full border border-slate-200">
+            <div class="hidden sm:block text-left">
+              <p class="text-xs font-semibold text-slate-800 leading-none">Ezzy virgiandra</p>
+              <p class="text-[10px] text-slate-400">Data Analyst Admin</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- PAGE 2: DASHBOARD ANALITIK -->
+      <div id="page-dashboard" class="p-6 space-y-6 max-w-7xl mx-auto w-full">
+        
+        <!-- Welcome Banner -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">Selamat Datang, Ezzy! 👋</h2>
+            <p class="text-xs text-slate-500 mt-1">Berikut adalah ringkasan kinerja data & analitik terkini untuk bulan ini.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl transition-all flex items-center space-x-1">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+              <span>Tahun 2026</span>
+            </button>
+            <button onclick="switchPage('form')" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-medium rounded-xl shadow-md shadow-indigo-100 transition-all flex items-center space-x-1.5">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Entri Data Baru</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Card 1 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-slate-500">Total Pendapatan</span>
+              <div class="p-2 bg-indigo-50 text-indigo-600 rounded-xl"><i data-lucide="wallet" class="w-4 h-4"></i></div>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900">Rp 148.500.000</h3>
+              <p class="text-[11px] text-emerald-600 font-medium mt-1 flex items-center">
+                <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i> +12.5% dari bulan lalu
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 2 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-slate-500">Pengguna Aktif</span>
+              <div class="p-2 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="users" class="w-4 h-4"></i></div>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900">1.420 <span class="text-xs font-normal text-slate-400">user</span></h3>
+              <p class="text-[11px] text-emerald-600 font-medium mt-1 flex items-center">
+                <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i> +8.2% minggu ini
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 3 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-slate-500">Tingkat Penyelesaian</span>
+              <div class="p-2 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900">94.8%</h3>
+              <p class="text-[11px] text-emerald-600 font-medium mt-1 flex items-center">
+                <i data-lucide="trending-up" class="w-3 h-3 mr-1"></i> +1.4% Target Tercapai
+              </p>
+            </div>
+          </div>
+
+          <!-- Card 4 -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-medium text-slate-500">Pengaduan Aktif</span>
+              <div class="p-2 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="alert-circle" class="w-4 h-4"></i></div>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-slate-900">342 <span class="text-xs font-normal text-slate-400">tiket</span></h3>
+              <p class="text-[11px] text-rose-500 font-medium mt-1 flex items-center">
+                <i data-lucide="trending-down" class="w-3 h-3 mr-1"></i> -3.1% Perlu Tindakan
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Bar Chart -->
+          <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+            <div class="flex items-center justify-between">
+              <div>
+                <h3 class="font-bold text-slate-900 text-sm">Tren Aktivitas & Entri Data</h3>
+                <p class="text-[11px] text-slate-400">Perbandingan data terdaftar dan terverifikasi per bulan</p>
+              </div>
+              <div class="flex items-center space-x-2">
+                <span class="flex items-center text-[10px] text-slate-500"><span class="w-2 h-2 rounded-full bg-indigo-600 mr-1"></span> Terdaftar</span>
+                <span class="flex items-center text-[10px] text-slate-500"><span class="w-2 h-2 rounded-full bg-indigo-300 mr-1"></span> Terverifikasi</span>
+              </div>
+            </div>
+            <div class="h-64 relative">
+              <canvas id="barChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Donut Chart -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-4 flex flex-col justify-between">
+            <div>
+              <h3 class="font-bold text-slate-900 text-sm">Distribusi Kategori Data</h3>
+              <p class="text-[11px] text-slate-400">Persentase data berdasarkan divisi</p>
+            </div>
+            <div class="h-48 relative flex items-center justify-center">
+              <canvas id="donutChart"></canvas>
+            </div>
+            <div class="space-y-2 text-xs pt-2 border-t border-slate-100">
+              <div class="flex justify-between items-center"><span class="text-slate-600 flex items-center"><span class="w-2 h-2 rounded-full bg-indigo-600 mr-2"></span>Keuangan & Operasional</span><span class="font-semibold">40%</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-600 flex items-center"><span class="w-2 h-2 rounded-full bg-purple-500 mr-2"></span>Logistik & Aset</span><span class="font-semibold">25%</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-600 flex items-center"><span class="w-2 h-2 rounded-full bg-blue-400 mr-2"></span>SDM & Kepegawaian</span><span class="font-semibold">20%</span></div>
+              <div class="flex justify-between items-center"><span class="text-slate-600 flex items-center"><span class="w-2 h-2 rounded-full bg-slate-300 mr-2"></span>Lain-lain</span><span class="font-semibold">15%</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+          <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h3 class="font-bold text-slate-900 text-sm">Aktivitas Data Terbaru</h3>
+              <p class="text-[11px] text-slate-400">Daftar entri data yang baru saja dimasukkan ke dalam sistem</p>
+            </div>
+            <div class="flex items-center space-x-2">
+              <div class="relative">
+                <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" placeholder="Cari data..." class="pl-8 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-indigo-500">
+              </div>
+              <button class="px-3 py-1.5 text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl flex items-center space-x-1">
+                <i data-lucide="filter" class="w-3 h-3"></i>
+                <span>Filter</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs text-slate-600">
+              <thead class="bg-slate-50 text-slate-500 uppercase font-semibold text-[10px]">
+                <tr>
+                  <th class="px-6 py-3">ID Data</th>
+                  <th class="px-6 py-3">Nama Aset / Aksi</th>
+                  <th class="px-6 py-3">Kategori</th>
+                  <th class="px-6 py-3">Penanggung Jawab</th>
+                  <th class="px-6 py-3">Tanggal & Waktu</th>
+                  <th class="px-6 py-3">Status</th>
+                  <th class="px-6 py-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100 font-medium">
+                <tr class="hover:bg-slate-50/50">
+                  <td class="px-6 py-3.5 text-indigo-600 font-semibold">#DAT-9021</td>
+                  <td class="px-6 py-3.5 text-slate-800 font-semibold">Pengadaan Server Cloud AWS R3</td>
+                  <td class="px-6 py-3.5">Keuangan</td>
+                  <td class="px-6 py-3.5 flex items-center space-x-2">
+                    <div class="w-5 h-5 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center text-[10px] font-bold">B</div>
+                    <span>Budi Santoso</span>
+                  </td>
+                  <td class="px-6 py-3.5 text-slate-400">20 Okt 2026, 14:20</td>
+                  <td class="px-6 py-3.5"><span class="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-semibold">Disetujui</span></td>
+                  <td class="px-6 py-3.5 text-right"><button class="text-slate-400 hover:text-slate-600"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hover:bg-slate-50/50">
+                  <td class="px-6 py-3.5 text-indigo-600 font-semibold">#DAT-9020</td>
+                  <td class="px-6 py-3.5 text-slate-800 font-semibold">Audit Fasilitas Perkantoran Bandung</td>
+                  <td class="px-6 py-3.5">Logistik</td>
+                  <td class="px-6 py-3.5 flex items-center space-x-2">
+                    <div class="w-5 h-5 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-[10px] font-bold">D</div>
+                    <span>Dina Lingga</span>
+                  </td>
+                  <td class="px-6 py-3.5 text-slate-400">20 Okt 2026, 11:15</td>
+                  <td class="px-6 py-3.5"><span class="px-2.5 py-1 bg-amber-50 text-amber-600 rounded-full text-[10px] font-semibold">Diproses</span></td>
+                  <td class="px-6 py-3.5 text-right"><button class="text-slate-400 hover:text-slate-600"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hover:bg-slate-50/50">
+                  <td class="px-6 py-3.5 text-indigo-600 font-semibold">#DAT-9019</td>
+                  <td class="px-6 py-3.5 text-slate-800 font-semibold">Kontrak Kerja Sama PT Elang Perkasa</td>
+                  <td class="px-6 py-3.5">SDM</td>
+                  <td class="px-6 py-3.5 flex items-center space-x-2">
+                    <div class="w-5 h-5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-[10px] font-bold">E</div>
+                    <span>Eka Kurniawan</span>
+                  </td>
+                  <td class="px-6 py-3.5 text-slate-400">19 Okt 2026, 16:45</td>
+                  <td class="px-6 py-3.5"><span class="px-2.5 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-semibold">Disetujui</span></td>
+                  <td class="px-6 py-3.5 text-right"><button class="text-slate-400 hover:text-slate-600"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button></td>
+                </tr>
+                <tr class="hover:bg-slate-50/50">
+                  <td class="px-6 py-3.5 text-indigo-600 font-semibold">#DAT-9018</td>
+                  <td class="px-6 py-3.5 text-slate-800 font-semibold">Revisi Inventaris Mesin Cabang Surabaya</td>
+                  <td class="px-6 py-3.5">Logistik</td>
+                  <td class="px-6 py-3.5 flex items-center space-x-2">
+                    <div class="w-5 h-5 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center text-[10px] font-bold">R</div>
+                    <span>Rian Permana</span>
+                  </td>
+                  <td class="px-6 py-3.5 text-slate-400">19 Okt 2026, 09:10</td>
+                  <td class="px-6 py-3.5"><span class="px-2.5 py-1 bg-rose-50 text-rose-600 rounded-full text-[10px] font-semibold">Ditolak</span></td>
+                  <td class="px-6 py-3.5 text-right"><button class="text-slate-400 hover:text-slate-600"><i data-lucide="more-horizontal" class="w-4 h-4"></i></button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="p-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Menampilkan 4 dari 128 Data</span>
+            <div class="flex items-center space-x-1">
+              <button class="px-2.5 py-1 border border-slate-200 rounded-lg hover:bg-slate-50">Sebelumnya</button>
+              <button class="px-2.5 py-1 bg-indigo-600 text-white rounded-lg font-semibold">1</button>
+              <button class="px-2.5 py-1 border border-slate-200 rounded-lg hover:bg-slate-50">2</button>
+              <button class="px-2.5 py-1 border border-slate-200 rounded-lg hover:bg-slate-50">3</button>
+              <button class="px-2.5 py-1 border border-slate-200 rounded-lg hover:bg-slate-50">Selanjutnya</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PAGE 3: FORMULIR ENTRI DATA BARU -->
+      <div id="page-form" class="hidden p-6 space-y-6 max-w-7xl mx-auto w-full">
+        
+        <!-- Header Page -->
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-900">Formulir Entri Data Baru</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Lengkapi formulir di bawah ini untuk memasukkan data baru ke dalam sistem operasional terpadu.</p>
+          </div>
+          <button onclick="switchPage('dashboard')" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-medium rounded-xl flex items-center space-x-1">
+            <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+            <span>Kembali ke Dashboard</span>
+          </button>
+        </div>
+
+        <!-- Form Layout (2 Columns) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- LEFT COLUMN: MAIN FORM (2 Cols Wide) -->
+          <form id="entryForm" onsubmit="handleFormSubmit(event)" class="lg:col-span-2 space-y-6">
+            
+            <!-- Section 1: Informasi Utama -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+              <div class="flex items-center space-x-2 border-b border-slate-100 pb-3">
+                <i data-lucide="info" class="w-4 h-4 text-indigo-600"></i>
+                <h3 class="font-bold text-slate-800 text-sm">Informasi Utama</h3>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Nama Aset / Projek <span class="text-red-500">*</span></label>
+                  <input type="text" required placeholder="Contoh: Pengadaan Hardware Server 2026" class="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Kategori Data <span class="text-red-500">*</span></label>
+                    <select required class="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                      <option value="">Pilih Kategori...</option>
+                      <option value="keuangan">Keuangan & Operasional</option>
+                      <option value="logistik">Logistik & Aset</option>
+                      <option value="sdm">SDM & Kepegawaian</option>
+                      <option value="lainnya">Lain-lain</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">Tanggal Transaksi <span class="text-red-500">*</span></label>
+                    <input type="date" required class="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                  </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-2">Tingkat Prioritas Pengadaan <span class="text-red-500">*</span></label>
+                  <div class="grid grid-cols-4 gap-2">
+                    <label class="cursor-pointer">
+                      <input type="radio" name="priority" value="rendah" class="peer hidden">
+                      <div class="p-2.5 text-center border border-slate-200 rounded-xl peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-600 text-xs font-medium text-slate-600 transition-all">Rendah</div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio" name="priority" value="sedang" checked class="peer hidden">
+                      <div class="p-2.5 text-center border border-slate-200 rounded-xl peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-600 text-xs font-medium text-slate-600 transition-all">Sedang</div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio" name="priority" value="tinggi" class="peer hidden">
+                      <div class="p-2.5 text-center border border-slate-200 rounded-xl peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-600 text-xs font-medium text-slate-600 transition-all">Tinggi</div>
+                    </label>
+                    <label class="cursor-pointer">
+                      <input type="radio" name="priority" value="mendesak" class="peer hidden">
+                      <div class="p-2.5 text-center border border-slate-200 rounded-xl peer-checked:border-indigo-600 peer-checked:bg-indigo-50 peer-checked:text-indigo-600 text-xs font-medium text-slate-600 transition-all">Mendesak</div>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Rincian & Nilai Transaksi -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center space-x-2">
+                  <i data-lucide="dollar-sign" class="w-4 h-4 text-indigo-600"></i>
+                  <h3 class="font-bold text-slate-800 text-sm">Rincian & Nilai Transaksi</h3>
+                </div>
+                <span class="text-[10px] bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-md font-semibold">Otomatis Terhitung</span>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Nilai Transaksi (Rp) <span class="text-red-500">*</span></label>
+                  <input type="number" placeholder="0" class="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-slate-600 mb-1">Jumlah Maksimal Disetujui <span class="text-red-500">*</span></label>
+                  <input type="number" placeholder="1" class="w-full px-3.5 py-2 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all">
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-2">
+                <div>
+                  <h4 class="text-xs font-semibold text-slate-700">Status Verifikasi Otomatis</h4>
+                  <p class="text-[11px] text-slate-400">Aktifkan untuk memproses verifikasi sistem secara langsung</p>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" checked class="sr-only peer">
+                  <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Section 3: Lampiran & Catatan Tambahan -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div class="flex items-center space-x-2">
+                  <i data-lucide="paperclip" class="w-4 h-4 text-indigo-600"></i>
+                  <h3 class="font-bold text-slate-800 text-sm">Lampiran & Catatan Tambahan</h3>
+                </div>
+                <span class="text-[10px] text-slate-400">Opsional</span>
+              </div>
+
+              <!-- Upload Area -->
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Unggah Dokumen Pendukung</label>
+                <div class="border-2 border-dashed border-slate-200 rounded-2xl p-6 text-center hover:border-indigo-400 transition-all bg-slate-50/50 cursor-pointer">
+                  <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+                  </div>
+                  <p class="text-xs font-semibold text-slate-700">Tarik & Lepas Dokumen di sini, atau <span class="text-indigo-600 underline">Jelajahi File</span></p>
+                  <p class="text-[10px] text-slate-400 mt-1">Format yang didukung: PDF, XLSX, DOCX (Maksimal 10MB)</p>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Catatan Keterangan</label>
+                <textarea rows="3" placeholder="Tambahkan catatan khusus terkait pengajuan data ini..." class="w-full p-3 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"></textarea>
+              </div>
+            </div>
+
+            <!-- Form Action Buttons -->
+            <div class="flex items-center justify-end space-x-3 pt-2">
+              <button type="reset" class="px-4 py-2.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-600 text-xs font-semibold rounded-xl transition-all">
+                Reset Form
+              </button>
+              <button type="button" onclick="alert('Draf berhasil disimpan!')" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-all flex items-center space-x-1.5">
+                <i data-lucide="save" class="w-3.5 h-3.5"></i>
+                <span>Simpan Draf</span>
+              </button>
+              <button type="submit" class="px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold rounded-xl shadow-md shadow-indigo-100 transition-all flex items-center space-x-1.5">
+                <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                <span>Simpan & Publikasikan Data</span>
+              </button>
+            </div>
+
+          </form>
+
+          <!-- RIGHT COLUMN: GUIDANCE & HELPER (1 Col Wide) -->
+          <div class="space-y-4">
+            
+            <!-- Guidance Card -->
+            <div class="bg-indigo-900 text-white p-5 rounded-2xl shadow-sm space-y-3 relative overflow-hidden">
+              <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-indigo-700/30 rounded-full blur-xl"></div>
+              <div class="flex items-center space-x-2">
+                <i data-lucide="help-circle" class="w-4 h-4 text-indigo-300"></i>
+                <h4 class="font-bold text-xs">Panduan Pengisian</h4>
+              </div>
+              <p class="text-[11px] text-indigo-200 leading-relaxed">
+                Pastikan seluruh kolom bertanda bintang (<span class="text-red-400">*</span>) diisi dengan benar. Data yang telah dipublikasikan akan membutuhkan persetujuan dari Supervisor sebelum tercatat sepenuhnya.
+              </p>
+            </div>
+
+            <!-- Help & Support -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+              <div class="flex items-center space-x-2 text-slate-800 font-semibold text-xs border-b border-slate-100 pb-2">
+                <i data-lucide="life-buoy" class="w-4 h-4 text-indigo-600"></i>
+                <span>Bantuan & Support</span>
+              </div>
+              <p class="text-[11px] text-slate-500 leading-relaxed">
+                Kendala teknis? Hubungi tim admin internal kami untuk panduan lebih lanjut.
+              </p>
+              <a href="#" class="inline-flex items-center text-xs font-semibold text-indigo-600 hover:underline">
+                <span>Kontak Support Internal</span>
+                <i data-lucide="external-link" class="w-3 h-3 ml-1"></i>
+              </a>
+            </div>
+
+            <!-- System Sync Card -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center space-x-3">
+              <div class="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              </div>
+              <div>
+                <h5 class="text-xs font-semibold text-slate-800">Status Sinkronisasi</h5>
+                <p class="text-[10px] text-slate-400">Terhubung dengan Database Cloud</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 bg-slate-900 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center space-x-3 transition-all transform translate-y-20 opacity-0 z-50 text-xs">
+    <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+    <span id="toast-message">Pesan notifikasi...</span>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // Chart Instances Container
+    let barChartInstance = null;
+    let donutChartInstance = null;
+
+    // Navigation Switcher (SPA)
+    function switchPage(page) {
+      const loginPage = document.getElementById('page-login');
+      const appContainer = document.getElementById('app-container');
+      const pageDashboard = document.getElementById('page-dashboard');
+      const pageForm = document.getElementById('page-form');
+
+      const navDashboard = document.getElementById('nav-dashboard');
+      const navForm = document.getElementById('nav-form');
+      const breadcrumbTitle = document.getElementById('breadcrumb-title');
+
+      if (page === 'login') {
+        loginPage.classList.remove('hidden');
+        appContainer.classList.add('hidden');
+        return;
+      }
+
+      loginPage.classList.add('hidden');
+      appContainer.classList.remove('hidden');
+
+      if (page === 'dashboard') {
+        pageDashboard.classList.remove('hidden');
+        pageForm.classList.add('hidden');
+        
+        navDashboard.classList.add('active-nav');
+        navDashboard.classList.remove('text-slate-600', 'hover:bg-slate-100');
+        navForm.classList.remove('active-nav');
+        navForm.classList.add('text-slate-600', 'hover:bg-slate-100');
+
+        breadcrumbTitle.textContent = "Dashboard Analitik";
+
+        // Render Charts when entering Dashboard
+        setTimeout(initCharts, 100);
+
+      } else if (page === 'form') {
+        pageForm.classList.remove('hidden');
+        pageDashboard.classList.add('hidden');
+
+        navForm.classList.add('active-nav');
+        navForm.classList.remove('text-slate-600', 'hover:bg-slate-100');
+        navDashboard.classList.remove('active-nav');
+        navDashboard.classList.add('text-slate-600', 'hover:bg-slate-100');
+
+        breadcrumbTitle.textContent = "Formulir Entri Data Baru";
+      }
+    }
+
+    // Login Handler
+    function handleLogin(e) {
+      e.preventDefault();
+      showToast("Berhasil masuk ke akun Anda!");
+      switchPage('dashboard');
+    }
+
+    function handleLoginDirect() {
+      showToast("Berhasil masuk melalui SSO!");
+      switchPage('dashboard');
+    }
+
+    function handleLogout() {
+      showToast("Anda telah keluar dari akun.");
+      switchPage('login');
+    }
+
+    // Form Submission Handler
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      showToast("Data baru berhasil disimpan dan dipublikasikan!");
+      setTimeout(() => {
+        switchPage('dashboard');
+      }, 1200);
+    }
+
+    // Show Toast Notification
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = msg;
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // Initialize Chart.js
+    function initCharts() {
+      // Bar Chart
+      const ctxBar = document.getElementById('barChart').getContext('2d');
+      if (barChartInstance) barChartInstance.destroy();
+      
+      barChartInstance = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+          datasets: [
+            {
+              label: 'Terdaftar',
+              data: [65, 59, 80, 81, 56, 95],
+              backgroundColor: '#4f46e5',
+              borderRadius: 6,
+            },
+            {
+              label: 'Terverifikasi',
+              data: [45, 48, 70, 75, 42, 85],
+              backgroundColor: '#a5b4fc',
+              borderRadius: 6,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            x: { grid: { display: false } },
+            y: { grid: { color: '#f1f5f9' }, border: { dash: [4, 4] } }
+          }
+        }
+      });
+
+      // Donut Chart
+      const ctxDonut = document.getElementById('donutChart').getContext('2d');
+      if (donutChartInstance) donutChartInstance.destroy();
+
+      donutChartInstance = new Chart(ctxDonut, {
+        type: 'doughnut',
+        data: {
+          labels: ['Keuangan & Operasional', 'Logistik & Aset', 'SDM & Kepegawaian', 'Lain-lain'],
+          datasets: [{
+            data: [40, 25, 20, 15],
+            backgroundColor: ['#4f46e5', '#a855f7', '#60a5fa', '#cbd5e1'],
+            borderWidth: 0,
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          cutout: '70%'
+        }
+      });
+    }
+  </script>
+</body>
+</html>
