@@ -1,63 +1,158 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <title>Biodata Saya</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Berita Harian</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        body {
+            background-color: #f4f4f9;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .topbar {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 15px;
+        }
+        .btn-primary {
+            background-color: #27ae60;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #219653;
+        }
+        .btn-edit {
+            background-color: #f39c12;
+            color: white;
+            margin-right: 8px;
+        }
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .berita-card {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .kategori {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+        .berita-card h2 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+            font-size: 20px;
+        }
+        .meta {
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .isi {
+            color: #444;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .tidak-ada {
+            text-align: center;
+            color: #888;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 10px;
+        }
+        .tidak-ada h3 {
+            margin-bottom: 10px;
+            color: #555;
+        }
+    </style>
 </head>
 <body>
-
-  <!-- Atas: Logo + Nama -->
-  <div class="atas">
-    <div class="logo">🎓 BIODATA</div>
-    <div class="menu">Home | Pendidikan | Hobi | Kontak</div>
-  </div>
-
-  <!-- Banner: Foto + Nama Lengkap -->
-  <div class="banner">
-    <img src="foto.jpg" alt="Foto Saya" width="150">
-    <h2>Ezzy Virgiandra</h2>
-    <p>Mahasiswa Teknik Informatika</p>
-  </div>
-
-  <!-- Intro: Tentang Saya -->
-  <div class="intro">
-    <h3>👋 Tentang Saya</h3>
-    <p>Halo! Saya Ezzy Virgiandra. Saya sedang menempuh pendidikan di jurusan Teknik Informatika. Saya suka belajar hal baru, terutama tentang pemrograman dan teknologi.</p>
-  </div>
-
-  <!-- 3 Kolom: Pendidikan, Hobi, Kontak -->
-  <div class="tiga-kotak">
-    <div class="kotak">
-      <h3>📚 Pendidikan</h3>
-      <br>
-      <p>✅ SDN amansari 1</p>
-      <p>✅ SMP Negeri 1 Rengasdengklok</p>
-      <p>✅ SMK Lentera Bangsa</p>
-      <p>🎓 Universitas Horizon Indonesia</p>
+    <div class="topbar">
+        <h1>📰 Portal Berita Harian</h1>
+        <a href="tambah.html" class="btn btn-primary">+ Tambah Berita</a>
     </div>
 
-    <div class="kotak">
-      <h3>🎯 Hobi & Minat</h3>
-      <br>
-      <p>💻 Belajar Pemrograman</p>
-      <p>🚴 Bersepeda</p>
-      <p>🎮 Main Game</p>
-    </div>
+    <div id="daftar-berita"></div>
 
-    <div class="kotak">
-      <h3>📞 Kontak</h3>
-      <br>
-      <p>📧 Email: ezzy.virgiandra.fict@krw.horizon.ac.id</p>
-      <p>📱 HP: 0857-xxxx-xxxx</p>
-      <p>🏠 Alamat: Karawang, Indonesia</p>
-      <p>🌐 IG: ezzy</p>
-    </div>
-  </div>
+    <script>
+        let berita = JSON.parse(localStorage.getItem('daftarBerita')) || [];
 
-  <!-- Footer -->
-  <div class="footer">
-    © 2026 Ezzy Virgiandra — Semua Hak Dilindungi
-  </div>
+        function simpanData() {
+            localStorage.setItem('daftarBerita', JSON.stringify(berita));
+        }
 
+        function tampilkanBerita() {
+            const wadah = document.getElementById('daftar-berita');
+            
+            if (berita.length === 0) {
+                wadah.innerHTML = `
+                    <div class="tidak-ada">
+                        <h3>Belum ada berita 😊</h3>
+                        <p>Jadilah yang pertama menulis berita hari ini!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            wadah.innerHTML = '';
+            for (let i = 0; i < berita.length; i++) {
+                wadah.innerHTML += `
+                    <div class="berita-card">
+                        <span class="kategori">${berita[i].kategori}</span>
+                        <h2>${berita[i].judul}</h2>
+                        <div class="meta">✍️ ${berita[i].penulis} | 📅 ${berita[i].tanggal}</div>
+                        <p class="isi">${berita[i].isi.substring(0, 250)}...</p>
+                        <div>
+                            <a href="edit.html?id=${i}" class="btn btn-edit">✏️ Edit</a>
+                            <button class="btn btn-delete" onclick="hapusBerita(${i})">🗑️ Hapus</button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function hapusBerita(index) {
+            if (confirm('Yakin mau hapus berita ini?')) {
+                berita.splice(index, 1);
+                simpanData();
+                tampilkanBerita();
+            }
+        }
+
+        tampilkanBerita();
+    </script>
 </body>
 </html>

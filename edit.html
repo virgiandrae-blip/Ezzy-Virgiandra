@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Berita</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        body {
+            background-color: #f4f4f9;
+            padding: 40px 20px;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 24px;
+        }
+        form {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        button, .btn-kembali {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        button {
+            background-color: #f39c12;
+            color: white;
+        }
+        .btn-kembali {
+            background-color: #95a5a6;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>✏️ Edit Berita</h1>
+    <form id="formEdit">
+        <label>Judul Berita</label>
+        <input type="text" id="judul" required>
+
+        <label>Penulis</label>
+        <input type="text" id="penulis" required>
+
+        <label>Kategori</label>
+        <select id="kategori" required>
+            <option value="">-- Pilih Kategori --</option>
+            <option>Nasional</option>
+            <option>Internasional</option>
+            <option>Olahraga</option>
+            <option>Teknologi</option>
+            <option>Hiburan</option>
+            <option>Kesehatan</option>
+        </select>
+
+        <label>Isi Berita</label>
+        <textarea id="isi" rows="8" required></textarea>
+
+        <a href="index.html" class="btn-kembali">← Kembali</a>
+        <button type="submit">Perbarui Berita</button>
+    </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const index = parseInt(urlParams.get('id'));
+        let daftar = JSON.parse(localStorage.getItem('daftarBerita')) || [];
+        const berita = daftar[index];
+
+        if (!berita) {
+            alert('Berita tidak ditemukan!');
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('judul').value = berita.judul;
+        document.getElementById('penulis').value = berita.penulis;
+        document.getElementById('kategori').value = berita.kategori;
+        document.getElementById('isi').value = berita.isi;
+
+        document.getElementById('formEdit').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            daftar[index] = {
+                ...berita,
+                judul: document.getElementById('judul').value,
+                penulis: document.getElementById('penulis').value,
+                kategori: document.getElementById('kategori').value,
+                isi: document.getElementById('isi').value
+            };
+
+            localStorage.setItem('daftarBerita', JSON.stringify(daftar));
+            alert('Berita diperbarui! ✅');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
